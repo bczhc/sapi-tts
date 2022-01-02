@@ -1,10 +1,11 @@
 #include "tts.h"
 #include "./lib.h"
+#include <pthread.h>
 
-int tts_init(struct TTS *tts) {
+void tts_init(struct TTS *tts) {
     if (FAILED(CoInitialize(NULL))) {
         err_println("CoInitialize(...) failed");
-        return 1;
+        abort();
     }
 
     tts->pVoice = NULL;
@@ -12,10 +13,8 @@ int tts_init(struct TTS *tts) {
     HRESULT hr = CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL, &IID_ISpVoice, (void **) &tts->pVoice);
     if (FAILED(hr)) {
         err_println("CoCreateInstance(...) failed");
-        return 1;
+        abort();
     }
-
-    return 0;
 }
 
 void tts_release(struct TTS *tts) {
@@ -25,11 +24,18 @@ void tts_release(struct TTS *tts) {
 
 void tts_speak(struct TTS *tts, const char *text) {
     struct UTF16String utf16String = utf8_to_utf16(text);
-    enum SPEAKFLAGS speakFlags = SPF_DEFAULT;
 
     ISpVoice *pVoice = tts->pVoice;
-    pVoice->lpVtbl->Speak(pVoice, utf16String.data, speakFlags, NULL);
+    struct ISpVoiceVtbl *tbl = pVoice->lpVtbl;
+    tbl->Speak(pVoice, utf16String.data, SPF_DEFAULT, NULL);
 
     utf16_release(&utf16String);
 }
 
+void tts_set_rate(struct TTS *tts, u32 rate) {
+    tts->pVoice->lpVtbl->SetRate(tts->pVoice, (long) rate);
+}
+
+ISpVoice *tts_get_handler(struct TTS *tts) {
+    return tts->pVoice;
+}

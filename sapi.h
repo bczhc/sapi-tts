@@ -29,7 +29,7 @@ enum SPEAKFLAGS
 }   SPEAKFLAGS;
 
 // Enum dummies
-typedef enum{SPVPRIORITY_X} SPVPRIORITY;
+typedef enum{SPVPRI_NORMAL,SPVPRI_ALERT,SPVPRI_OVER} SPVPRIORITY;
 typedef enum{SPEVENTENUM_X} SPEVENTENUM;
 
 // Interface dummies
