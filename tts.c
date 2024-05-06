@@ -22,18 +22,30 @@ void tts_release(struct TTS *tts) {
     CoUninitialize();
 }
 
-void tts_speak(struct TTS *tts, const char *text) {
+void tts_speak_flags(struct TTS *tts, const char *text, DWORD flags) {
     struct UTF16String utf16String = utf8_to_utf16(text);
 
     ISpVoice *pVoice = tts->pVoice;
     struct ISpVoiceVtbl *tbl = pVoice->lpVtbl;
-    tbl->Speak(pVoice, utf16String.data, SPF_DEFAULT, NULL);
+    tbl->Speak(pVoice, utf16String.data, flags, NULL);
 
     utf16_release(&utf16String);
 }
 
+void tts_speak(struct TTS *tts, const char *text) {
+    tts_speak_flags(tts, text, SPF_DEFAULT);
+}
+
+void tts_speak_async(struct TTS *tts, const char *text) {
+    tts_speak_flags(tts, text, SPF_ASYNC);
+}
+
 void tts_set_rate(struct TTS *tts, u32 rate) {
     tts->pVoice->lpVtbl->SetRate(tts->pVoice, (long) rate);
+}
+
+void tts_set_priority(struct TTS *tts, SPVPRIORITY priority) {
+    tts->pVoice->lpVtbl->SetPriority(tts->pVoice, priority);
 }
 
 ISpVoice *tts_get_handler(struct TTS *tts) {

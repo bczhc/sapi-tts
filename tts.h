@@ -14,9 +14,15 @@ void tts_init(struct TTS *tts);
 
 void tts_release(struct TTS *tts);
 
+void tts_speak_flags(struct TTS *tts, const char *text, DWORD flags);
+
 void tts_speak(struct TTS *tts, const char *text);
 
+void tts_speak_async(struct TTS *tts, const char *text);
+
 void tts_set_rate(struct TTS *tts, u32 rate);
+
+void tts_set_priority(struct TTS *tts, SPVPRIORITY priority);
 
 ISpVoice *tts_get_handler(struct TTS *tts);
 
