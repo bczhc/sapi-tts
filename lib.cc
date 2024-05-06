@@ -1,4 +1,6 @@
-#include "lib.h"
+#include "lib.hh"
+#include <cstdarg>
+#include <cstdio>
 
 void err_printf(const char *format, ...) {
     va_list args;

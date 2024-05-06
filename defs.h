@@ -1,8 +1,7 @@
 #ifndef SAPI_TTS_DEFS_H
 #define SAPI_TTS_DEFS_H
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
 
 typedef uint8_t u8;
 typedef int8_t i8;
